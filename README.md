@@ -4,6 +4,8 @@
 [![PHP 7.4+](https://img.shields.io/badge/PHP-7.4%2B-777bb4?logo=php&logoColor=white)](https://www.php.net/)
 [![License: GPL-2.0-or-later](https://img.shields.io/badge/License-GPL--2.0--or--later-blue)](https://www.gnu.org/licenses/gpl-2.0.html)
 
+WordPress.org: https://wordpress.org/plugins/forma-favicon/
+
 WordPress plugin for generating and managing favicons. Upload a source image, configure colors, and generate all required favicon sizes including ICO, Apple Touch Icon, Android Chrome icons, and web manifest.
 
 ## Features
