@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="Forma Favicon icon">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6D3B63"/>
+      <stop offset="100%" stop-color="#8E4D78"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+
+  <rect x="12" y="12" width="232" height="232" rx="52" fill="url(#bg)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="62" y="62" width="132" height="132" rx="24" fill="#FFFFFF"/>
+    <path d="M92 96h62c4 0 7 3 7 7s-3 7-7 7h-48v20h39c4 0 7 3 7 7s-3 7-7 7h-39v26c0 4-3 7-7 7s-7-3-7-7z" fill="#6D3B63"/>
+  </g>
+</svg>
