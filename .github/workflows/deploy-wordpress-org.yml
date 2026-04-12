@@ -32,4 +32,4 @@ jobs:
           SLUG: forma-favicon
           SVN_USERNAME: ${{ secrets.WPORG_SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.WPORG_SVN_PASSWORD }}
-          SKIP_ASSETS: true
+          SKIP_ASSETS: false
