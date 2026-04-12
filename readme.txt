@@ -4,7 +4,7 @@ Tags: favicon, icon, generator, browser icon, site icon
 Requires at least: 6.2
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,6 +94,9 @@ No. Generated files remain in the uploads directory. You can delete them from th
 
 == Changelog ==
 
+= 1.0.1 =
+* Add WordPress.org plugin icons (128x128 and 256x256)
+
 = 1.0.0 =
 * Initial release
 * Upload PNG, JPEG, GIF, WebP, or SVG as favicon source
@@ -122,6 +125,9 @@ To build from source:
 3. Run the build: `npm run build`
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+Adds official WordPress.org plugin icons for improved listing presentation.
 
 = 1.0.0 =
 Initial release.
