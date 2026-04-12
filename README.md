@@ -43,6 +43,35 @@ npm run build
 npm run typecheck
 ```
 
+## WordPress.org Deployment
+
+This repository is configured to deploy to the WordPress.org plugin directory via GitHub Actions.
+
+### One time setup
+
+1. In GitHub, open **Settings -> Secrets and variables -> Actions**
+2. Create repository secret `WPORG_SVN_USERNAME` with your WordPress.org username
+3. Create repository secret `WPORG_SVN_PASSWORD` with your generated SVN password
+
+### Release flow
+
+1. Update version in `forma-favicon.php` (`Version` and `FORMA_FAVICON_VERSION`)
+2. Update `Stable tag` and changelog in `readme.txt`
+3. Commit and push to `main`
+4. Create and push a tag in semver format:
+
+```bash
+git tag v1.0.1
+git push origin v1.0.1
+```
+
+5. The workflow builds assets and deploys to `https://plugins.svn.wordpress.org/forma-favicon`
+
+### Notes
+
+1. The workflow uses `SKIP_ASSETS: true`, so plugin directory assets are not uploaded from CI
+2. If you add banner or icon assets later, add a `.wordpress-org/` directory and set `SKIP_ASSETS: false`
+
 ## Tech Stack
 
 - **Frontend:** React (via `@wordpress/element`), TypeScript, UnoCSS
