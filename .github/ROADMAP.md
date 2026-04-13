@@ -12,7 +12,6 @@
 |---------|-------------|
 | **SVG favicon** | Serve native SVG favicon for modern browsers (sharper at any size). Falls back to ICO for old browsers |
 | **Maskable icon** | Generate a "safe zone" version for Android adaptive icons |
-| **Crop/position tool** | Simple drag-to-reposition if the source isn't perfectly square |
 | **PWA manifest editor** | Let users edit app name, short name, display mode, orientation |
 
 ## Nice to Have
