@@ -16,6 +16,7 @@ import { ColorPickers } from './ColorPickers';
 import { IconOptions } from './IconOptions';
 import { Actions } from './Actions';
 import { DeleteModal } from './DeleteModal';
+import { CropModal } from './CropModal';
 import { BrowserTabPreview } from './BrowserTabPreview';
 import { GoogleSearchPreview } from './GoogleSearchPreview';
 import { Preview } from './Preview';
@@ -36,6 +37,7 @@ export const AdminFaviconApp = () => {
         cacheBuster,
         faviconUrl,
         hasUnsavedChanges,
+        cropImageUrl,
         setThemeColor,
         setBgColor,
         setPadding,
@@ -44,6 +46,8 @@ export const AdminFaviconApp = () => {
         openMediaLibrary,
         generate,
         deleteFavicons,
+        applyCrop,
+        cancelCrop,
     } = useFavicon();
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -114,6 +118,14 @@ export const AdminFaviconApp = () => {
                         deleteFavicons();
                     }}
                     onCancel={() => setShowDeleteModal(false)}
+                />
+            )}
+
+            {cropImageUrl && (
+                <CropModal
+                    imageUrl={cropImageUrl}
+                    onCrop={applyCrop}
+                    onCancel={cancelCrop}
                 />
             )}
 

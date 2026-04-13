@@ -25,6 +25,8 @@ export function useFavicon() {
     const [deleting, setDeleting] = useState(false);
     const [notice, setNotice] = useState<Notice | null>(null);
     const [cacheBuster, setCacheBuster] = useState(Date.now());
+    const [cropImageUrl, setCropImageUrl] = useState('');
+    const [croppedDataUrl, setCroppedDataUrl] = useState('');
 
     // Track the last-generated settings to detect unsaved changes.
     const savedState = useRef({
@@ -51,11 +53,34 @@ export function useFavicon() {
     const selectImage = useCallback((attachment: any) => {
         const mime = attachment.mime || attachment.type || '';
         const isSvgFile = mime === 'image/svg+xml' || attachment.url?.endsWith('.svg');
+        const fullUrl = attachment.sizes?.full?.url || attachment.url;
+        const width = attachment.width || 0;
+        const height = attachment.height || 0;
 
         setSourceId(attachment.id);
-        setSourceUrl(attachment.sizes?.medium?.url || attachment.sizes?.full?.url || attachment.url);
         setIsSvg(isSvgFile);
+        setCroppedDataUrl('');
+
+        if (!isSvgFile && width && height && width !== height) {
+            setCropImageUrl(fullUrl);
+            setSourceUrl(fullUrl);
+        } else {
+            setCropImageUrl('');
+            setSourceUrl(attachment.sizes?.medium?.url || fullUrl);
+        }
+
         setGenerated(false);
+    }, []);
+
+    const applyCrop = useCallback((dataUrl: string) => {
+        setCroppedDataUrl(dataUrl);
+        setSourceUrl(dataUrl);
+        setCropImageUrl('');
+        setGenerated(false);
+    }, []);
+
+    const cancelCrop = useCallback(() => {
+        setCropImageUrl('');
     }, []);
 
     const openMediaLibrary = useCallback(() => {
@@ -98,6 +123,9 @@ export function useFavicon() {
                     setSaving(false);
                     return;
                 }
+            } else if (croppedDataUrl) {
+                bodyData.source_data = croppedDataUrl;
+                bodyData.attachment_id = sourceId;
             } else {
                 bodyData.attachment_id = sourceId;
             }
@@ -126,7 +154,7 @@ export function useFavicon() {
         } finally {
             setSaving(false);
         }
-    }, [sourceId, sourceUrl, isSvg, themeColor, bgColor, padding, borderRadius, iconBgColor, data.restUrl, data.nonce, showNotice]);
+    }, [sourceId, sourceUrl, isSvg, croppedDataUrl, themeColor, bgColor, padding, borderRadius, iconBgColor, data.restUrl, data.nonce, showNotice]);
 
     const deleteFavicons = useCallback(async () => {
         setDeleting(true);
@@ -179,6 +207,7 @@ export function useFavicon() {
         cacheBuster,
         faviconUrl: data.faviconUrl,
         hasUnsavedChanges,
+        cropImageUrl,
 
         // Setters
         setThemeColor,
@@ -191,5 +220,7 @@ export function useFavicon() {
         openMediaLibrary,
         generate,
         deleteFavicons,
+        applyCrop,
+        cancelCrop,
     };
 }
