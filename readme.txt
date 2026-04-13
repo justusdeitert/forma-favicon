@@ -4,7 +4,7 @@ Tags: favicon, icon, generator, browser icon, site icon
 Requires at least: 6.2
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -93,6 +93,12 @@ No. Generated files remain in the uploads directory. You can delete them from th
 4. Icon styling controls — padding, border radius, and background color
 
 == Changelog ==
+
+= 1.0.3 =
+* Add image crop tool for non-square source images
+* Rename generate button to Generate & Apply
+* Drop standalone 16x16 PNG favicon output
+* Fix box shadow on tab icon in browser preview
 
 = 1.0.2 =
 * Add .distignore to exclude dev files from plugin package

@@ -7,6 +7,8 @@
 import { useState, useCallback, useRef } from '@wordpress/element';
 import type { Notice } from '../types';
 import { getWindowData } from '../utils/get-data';
+
+declare const wp: any;
 import { rasterizeToBase64 } from '../utils/rasterize';
 
 export function useFavicon() {
