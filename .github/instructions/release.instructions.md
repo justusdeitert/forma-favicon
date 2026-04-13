@@ -6,19 +6,24 @@ description: "Use when creating a plugin release tag and deploying to WordPress.
 
 ## 1. Choose version
 
-- Use patch (`1.0.0 -> 1.0.1`) for fixes and small improvements
-- Use minor (`1.0.1 -> 1.1.0`) for notable new features
+- Use patch (`1.0.1 -> 1.0.2`) for fixes and small improvements
+- Use minor (`1.0.2 -> 1.1.0`) for notable new features
 
 ## 2. Update versioned files
 
-- Update `Version` in `forma-favicon.php`
-- Update `FORMA_FAVICON_VERSION` in `forma-favicon.php`
-- Update `Stable tag` in `readme.txt`
-- Add changelog section for the new version in `readme.txt`
+All four locations must use the same version string:
 
-## 3. Sync dependencies when needed
+- `Version` header in `forma-favicon.php`
+- `FORMA_FAVICON_VERSION` constant in `forma-favicon.php`
+- `Stable tag` in `readme.txt`
+- `version` in `package.json`
 
-- If dependencies changed, run `npm install` and commit updated `package-lock.json`
+Also add a changelog section for the new version in `readme.txt`.
+
+## 3. Sync lock file
+
+- Run `npm install --package-lock-only` to update `package-lock.json`
+- If dependencies changed, run `npm install` instead and commit the updated lock file
 - Ensure CI install step will pass (`npm ci`)
 
 ## 4. Build and verify
@@ -28,7 +33,7 @@ description: "Use when creating a plugin release tag and deploying to WordPress.
 
 ## 5. Create release commit
 
-- Commit relevant release files
+- Stage: versioned files, `package-lock.json`, and any other changed files for the release
 - Commit message format: `chore: release v<version>`
 - Optional body bullets should start with capital letters
 
@@ -40,6 +45,8 @@ description: "Use when creating a plugin release tag and deploying to WordPress.
 ## 7. Deploy and validate
 
 - Tag push triggers `.github/workflows/deploy-wordpress-org.yml`
+- The workflow runs `npm ci && npm run build`, then deploys via SVN
+- `.distignore` controls which files are excluded from the WordPress.org package
 - Confirm workflow success in GitHub Actions
 - Verify listing page and version on WordPress.org:
   - `https://wordpress.org/plugins/forma-favicon/`

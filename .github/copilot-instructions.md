@@ -36,6 +36,8 @@
 
 - Deployment to WordPress.org runs through GitHub Actions workflow at `.github/workflows/deploy-wordpress-org.yml`.
 - Release tags use format `vX.Y.Z` and trigger deployment.
+- `.distignore` controls which files are excluded from the WordPress.org plugin package.
 - Keep plugin versions aligned in:
   - `forma-favicon.php` (`Version` and `FORMA_FAVICON_VERSION`)
   - `readme.txt` (`Stable tag` and changelog section)
+  - `package.json` (`version`)

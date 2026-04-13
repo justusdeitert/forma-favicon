@@ -1,7 +1,7 @@
 {
     "name": "forma-favicon",
     "private": true,
-    "version": "1.0.0",
+    "version": "1.0.2",
     "scripts": {
         "dev": "wp-scripts start --config webpack.config.ts",
         "build": "wp-scripts build --config webpack.config.ts",

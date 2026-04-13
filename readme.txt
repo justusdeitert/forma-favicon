@@ -4,7 +4,7 @@ Tags: favicon, icon, generator, browser icon, site icon
 Requires at least: 6.2
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -93,6 +93,10 @@ No. Generated files remain in the uploads directory. You can delete them from th
 4. Icon styling controls — padding, border radius, and background color
 
 == Changelog ==
+
+= 1.0.2 =
+* Add .distignore to exclude dev files from plugin package
+* Include compiled build assets in distribution
 
 = 1.0.1 =
 * Add WordPress.org plugin icons (128x128 and 256x256)

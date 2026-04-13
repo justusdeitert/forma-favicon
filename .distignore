@@ -1,0 +1,26 @@
+# Dev and build tooling
+.git
+.github
+node_modules
+src
+
+# Config files
+.distignore
+.gitignore
+.editorconfig
+.env
+package.json
+package-lock.json
+tsconfig.json
+postcss.config.js
+uno.config.ts
+webpack.config.ts
+
+# Non-plugin docs
+IDEAS.md
+README.md
+
+# System files
+.DS_Store
+Thumbs.db
+*.log
