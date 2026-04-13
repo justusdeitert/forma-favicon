@@ -20,7 +20,7 @@ export const Actions = ({ generated, saving, deleting, onGenerate, onDelete }: P
             disabled={saving}
             className="px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 border-none cursor-pointer bg-blue-600 text-white hover:bg-blue-700 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
         >
-            {saving ? 'Generating…' : generated ? 'Regenerate Favicons' : 'Generate Favicons'}
+            {saving ? 'Generating…' : generated ? 'Regenerate & Apply' : 'Generate & Apply'}
         </button>
         {generated && (
             <button
