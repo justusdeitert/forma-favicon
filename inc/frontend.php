@@ -30,7 +30,6 @@ function forma_favicon_output_tags() {
     $link_tags = [
         [ 'file' => 'favicon.ico',    'rel' => 'icon', 'type' => 'image/x-icon', 'sizes' => '' ],
         [ 'file' => 'favicon-32x32.png', 'rel' => 'icon', 'type' => 'image/png', 'sizes' => '32x32' ],
-        [ 'file' => 'favicon-16x16.png', 'rel' => 'icon', 'type' => 'image/png', 'sizes' => '16x16' ],
         [ 'file' => 'apple-touch-icon.png', 'rel' => 'apple-touch-icon', 'type' => '', 'sizes' => '180x180' ],
         [ 'file' => 'site.webmanifest', 'rel' => 'manifest', 'type' => '', 'sizes' => '' ],
     ];

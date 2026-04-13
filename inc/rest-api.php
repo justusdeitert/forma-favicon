@@ -83,7 +83,6 @@ add_action( 'rest_api_init', 'forma_favicon_register_rest_routes' );
  */
 function forma_favicon_get_sizes() {
     return [
-        'favicon-16x16.png'          => 16,
         'favicon-32x32.png'          => 32,
         'favicon-48x48.png'          => 48,
         'apple-touch-icon.png'       => 180,
@@ -272,8 +271,12 @@ function forma_favicon_apply_border_radius( &$image, $size, $radius_pct ) {
         return;
     }
 
-    // Create a mask image: white = keep, black (transparent) = discard.
-    $mask = imagecreatetruecolor( $size, $size );
+    // Draw the mask at 4x resolution, then downsample for smooth anti-aliased edges.
+    $scale    = 4;
+    $big_size = $size * $scale;
+    $big_r    = $radius * $scale;
+
+    $mask = imagecreatetruecolor( $big_size, $big_size );
     imagealphablending( $mask, false );
     imagesavealpha( $mask, true );
     $mask_transparent = imagecolorallocatealpha( $mask, 0, 0, 0, 127 );
@@ -281,38 +284,48 @@ function forma_favicon_apply_border_radius( &$image, $size, $radius_pct ) {
 
     $white = imagecolorallocate( $mask, 255, 255, 255 );
 
-    // Draw filled rounded rectangle on the mask.
-    // Center rectangle (horizontal bar).
-    imagefilledrectangle( $mask, $radius, 0, $size - $radius - 1, $size - 1, $white );
-    // Left bar.
-    imagefilledrectangle( $mask, 0, $radius, $radius - 1, $size - $radius - 1, $white );
-    // Right bar.
-    imagefilledrectangle( $mask, $size - $radius, $radius, $size - 1, $size - $radius - 1, $white );
+    // Draw filled rounded rectangle on the oversized mask.
+    imagefilledrectangle( $mask, $big_r, 0, $big_size - $big_r - 1, $big_size - 1, $white );
+    imagefilledrectangle( $mask, 0, $big_r, $big_r - 1, $big_size - $big_r - 1, $white );
+    imagefilledrectangle( $mask, $big_size - $big_r, $big_r, $big_size - 1, $big_size - $big_r - 1, $white );
 
-    // Four corner arcs.
-    $diameter = $radius * 2;
-    imagefilledellipse( $mask, $radius, $radius, $diameter, $diameter, $white );                          // top-left
-    imagefilledellipse( $mask, $size - $radius - 1, $radius, $diameter, $diameter, $white );              // top-right
-    imagefilledellipse( $mask, $radius, $size - $radius - 1, $diameter, $diameter, $white );              // bottom-left
-    imagefilledellipse( $mask, $size - $radius - 1, $size - $radius - 1, $diameter, $diameter, $white );  // bottom-right
+    $diameter = $big_r * 2;
+    imagefilledellipse( $mask, $big_r, $big_r, $diameter, $diameter, $white );
+    imagefilledellipse( $mask, $big_size - $big_r - 1, $big_r, $diameter, $diameter, $white );
+    imagefilledellipse( $mask, $big_r, $big_size - $big_r - 1, $diameter, $diameter, $white );
+    imagefilledellipse( $mask, $big_size - $big_r - 1, $big_size - $big_r - 1, $diameter, $diameter, $white );
 
-    // Apply mask: make pixels transparent where mask is not white.
+    // Downsample the mask to target size.
+    $small_mask = imagecreatetruecolor( $size, $size );
+    imagealphablending( $small_mask, false );
+    imagesavealpha( $small_mask, true );
+    $sm_transparent = imagecolorallocatealpha( $small_mask, 0, 0, 0, 127 );
+    imagefill( $small_mask, 0, 0, $sm_transparent );
+    imagecopyresampled( $small_mask, $mask, 0, 0, 0, 0, $size, $size, $big_size, $big_size );
+    imagedestroy( $mask );
+
+    // Apply mask with anti-aliased alpha blending.
     imagealphablending( $image, false );
     $transparent = imagecolorallocatealpha( $image, 0, 0, 0, 127 );
 
     for ( $x = 0; $x < $size; $x++ ) {
         for ( $y = 0; $y < $size; $y++ ) {
-            $mask_color = imagecolorat( $mask, $x, $y );
-            $mask_alpha = ( $mask_color >> 24 ) & 0x7F;
+            $mask_rgba  = imagecolorsforindex( $small_mask, imagecolorat( $small_mask, $x, $y ) );
+            $mask_alpha = $mask_rgba['alpha'];
 
-            if ( $mask_alpha > 0 ) {
+            if ( $mask_alpha >= 127 ) {
                 imagesetpixel( $image, $x, $y, $transparent );
+            } elseif ( $mask_alpha > 0 ) {
+                $orig_rgba = imagecolorsforindex( $image, imagecolorat( $image, $x, $y ) );
+                $new_alpha = min( 127, $orig_rgba['alpha'] + $mask_alpha );
+                $blended   = imagecolorallocatealpha( $image, $orig_rgba['red'], $orig_rgba['green'], $orig_rgba['blue'], $new_alpha );
+                imagesetpixel( $image, $x, $y, $blended );
             }
         }
     }
 
     imagesavealpha( $image, true );
-    imagedestroy( $mask );
+    imagedestroy( $small_mask );
 }
 
 /**
