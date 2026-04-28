@@ -101,6 +101,9 @@ export const IconOptions = ({
                         </button>
                     )}
                 </div>
+                <p className="text-xs text-gray-400 mt-2 m-0">
+                    Only visible where the source image is transparent.
+                </p>
             </div>
         </div>
     </div>
