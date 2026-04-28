@@ -53,13 +53,13 @@ export const IconOptions = ({
     onIconBgColorChange,
 }: Props) => (
     <div className="mb-8 p-6 bg-white rounded-xl border-2 border-gray-100">
-        <h2 className="text-base font-medium text-gray-700 m-0 mb-4">Icon Styling</h2>
+        <h2 className="text-base font-medium text-gray-700 m-0 mb-4">Icon Shape</h2>
         <p className="text-xs text-gray-400 m-0 mb-5">
-            Adjust padding, corner rounding, and background color applied to all generated favicon sizes.
+            Adjust spacing, corner roundness, and tile background applied to all generated favicon sizes.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <RangeField
-                label="Padding"
+                label="Edge Spacing"
                 value={padding}
                 min={0}
                 max={40}
@@ -67,7 +67,7 @@ export const IconOptions = ({
                 onChange={onPaddingChange}
             />
             <RangeField
-                label="Border Radius"
+                label="Corner Roundness"
                 value={borderRadius}
                 min={0}
                 max={50}
@@ -75,7 +75,7 @@ export const IconOptions = ({
                 onChange={onBorderRadiusChange}
             />
             <div>
-                <label className="block text-sm font-medium text-gray-600 mb-2">Icon Background</label>
+                <label className="block text-sm font-medium text-gray-600 mb-2">Tile Background</label>
                 <div className="flex items-center gap-3">
                     <input
                         type="color"
