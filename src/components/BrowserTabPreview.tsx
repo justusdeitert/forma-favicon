@@ -38,11 +38,11 @@ export const BrowserTabPreview = ({ faviconUrl, cacheBuster, livePreviewUrl, uns
             <div className="flex flex-wrap gap-6">
                 {/* Browser window mockup */}
                 <div className={`forma-favicon-browser-preview relative grid gap-4 w-[350px] h-[88px] pt-4 pl-4 overflow-hidden box-border border border-solid rounded-md${dark ? ' is-dark' : ''}`} style={{ gridTemplateColumns: '58px 1fr' }}>
-                    {/* App icon */}
+                    {/* App icon (border radius is baked into the image / live canvas) */}
                     <img
                         src={appleTouchIcon}
                         alt="App icon preview"
-                        className="forma-favicon-browser-preview__app-icon relative z-1 w-[58px] h-[58px] rounded-xl object-cover"
+                        className="forma-favicon-browser-preview__app-icon relative z-1 w-[58px] h-[58px] object-cover"
                     />
 
                     {/* Browser chrome */}

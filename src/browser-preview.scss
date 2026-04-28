@@ -38,9 +38,10 @@
     }
 }
 
-/* App icon border */
+/* App icon: subtle drop shadow so the icon reads as a tile without forcing a square outline.
+   The shape itself comes from the user's chosen border radius (baked into the PNG / canvas). */
 .forma-favicon-browser-preview__app-icon {
-    outline: 1px solid rgba(0, 0, 0, 0.2);
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
 }
 
 /* Chrome gradient + border colors from vars */

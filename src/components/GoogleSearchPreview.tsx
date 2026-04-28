@@ -46,8 +46,8 @@ export const GoogleSearchPreview = ({ faviconUrl, cacheBuster, livePreviewUrl, d
                 <div className="flex items-center gap-3 mb-1">
                     <div className={`w-[28px] h-[28px] rounded-full overflow-hidden flex items-center justify-center shrink-0 border border-solid ${
                         dark
-                            ? 'bg-white border-[#5c5f5e]'
-                            : 'bg-[#f3f5f6] border-[#d2d2d2]'
+                            ? 'bg-[#303134] border-[#3c4043]'
+                            : 'bg-[#f1f3f4] border-[#dadce0]'
                     }`}>
                         <img
                             src={favicon32}
