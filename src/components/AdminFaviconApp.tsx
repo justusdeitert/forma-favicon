@@ -4,7 +4,7 @@
  * @package FormaFavicon
  */
 
-import { useState } from '@wordpress/element';
+import { useState, useEffect } from '@wordpress/element';
 import { useFavicon } from '../hooks/use-favicon';
 import { useFaviconPreview } from '../hooks/use-favicon-preview';
 import { getWindowData } from '../utils/get-data';
@@ -51,8 +51,20 @@ export const AdminFaviconApp = () => {
     } = useFavicon();
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [previewDark, setPreviewDark] = useState(false);
+    const [previewDark, setPreviewDark] = useState(
+        () => typeof window !== 'undefined'
+            && window.matchMedia?.('(prefers-color-scheme: dark)').matches
+    );
     const { conflicts } = getWindowData();
+
+    // Follow system color-scheme changes while the page is open.
+    useEffect(() => {
+        const mql = window.matchMedia?.('(prefers-color-scheme: dark)');
+        if (!mql) return;
+        const onChange = (e: MediaQueryListEvent) => setPreviewDark(e.matches);
+        mql.addEventListener('change', onChange);
+        return () => mql.removeEventListener('change', onChange);
+    }, []);
 
     const livePreviewUrl = useFaviconPreview({
         sourceUrl,
