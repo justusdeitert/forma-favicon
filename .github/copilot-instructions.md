@@ -4,6 +4,10 @@
 
 - Do not use em dashes (`—`, `U+2014`). Rephrase instead.
 
+## Git Safety
+
+- Never push code (`git push`) without explicit user confirmation.
+
 ## Overview
 
 - WordPress plugin that generates and manages favicons from one source image.

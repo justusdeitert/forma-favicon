@@ -8,6 +8,7 @@ description: "Use when creating a plugin release tag and deploying to WordPress.
 
 - Use patch (`1.0.1 -> 1.0.2`) for fixes and small improvements
 - Use minor (`1.0.2 -> 1.1.0`) for notable new features
+- Always propose the recommended version and wait for explicit user confirmation before bumping.
 
 ## 2. Update versioned files
 
