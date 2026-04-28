@@ -7,6 +7,7 @@
 import type { PreviewSize } from './types';
 
 export const PREVIEW_SIZES: PreviewSize[] = [
+    { file: 'source.png', label: 'Source', desc: 'Working image' },
     { file: 'favicon-32x32.png', label: '32×32', desc: 'Taskbar' },
     { file: 'favicon-48x48.png', label: '48×48', desc: 'Desktop shortcut' },
     { file: 'apple-touch-icon.png', label: '180×180', desc: 'Apple Touch Icon' },

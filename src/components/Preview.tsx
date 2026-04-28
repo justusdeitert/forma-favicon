@@ -21,11 +21,11 @@ export const Preview = ({ faviconUrl, cacheBuster }: Props) => (
                 <code className="text-xs bg-gray-100 px-1.5 py-0.5 rounded">/wp-content/uploads/favicon/</code>
             </p>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
                 {PREVIEW_SIZES.map(({ file, label, desc }) => (
                     <div
                         key={file}
-                        className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all"
+                        className="min-w-0 flex flex-col items-center gap-2 p-3 rounded-xl bg-white border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all"
                     >
                         <div className="w-12 h-12 flex items-center justify-center">
                             <img
@@ -35,9 +35,15 @@ export const Preview = ({ faviconUrl, cacheBuster }: Props) => (
                                 style={{ imageRendering: 'auto' }}
                             />
                         </div>
-                        <div className="text-center">
-                            <div className="text-xs font-medium text-gray-700">{label}</div>
-                            <div className="text-[10px] text-gray-400">{desc}</div>
+                        <div className="w-full text-center min-w-0">
+                            <div className="text-xs font-medium text-gray-700 truncate">{label}</div>
+                            <div className="text-[10px] text-gray-400 truncate" title={desc}>{desc}</div>
+                            <div
+                                className="text-[10px] text-gray-400 font-mono truncate mt-1"
+                                title={file}
+                            >
+                                {file}
+                            </div>
                         </div>
                     </div>
                 ))}
