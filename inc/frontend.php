@@ -34,6 +34,10 @@ function forma_favicon_output_tags() {
         [ 'file' => 'site.webmanifest', 'rel' => 'manifest', 'type' => '', 'sizes' => '' ],
     ];
 
+    // Cache-bust public asset URLs so mobile browsers refetch icons after regeneration.
+    $version = ! empty( $option['generated_at'] ) ? (int) $option['generated_at'] : 0;
+    $version_query = $version ? '?v=' . $version : '';
+
     foreach ( $link_tags as $tag ) {
         if ( ! file_exists( $path . '/' . $tag['file'] ) ) {
             continue;
@@ -42,7 +46,7 @@ function forma_favicon_output_tags() {
         $attrs = 'rel="' . esc_attr( $tag['rel'] ) . '"';
         if ( $tag['type'] )  $attrs .= ' type="' . esc_attr( $tag['type'] ) . '"';
         if ( $tag['sizes'] ) $attrs .= ' sizes="' . esc_attr( $tag['sizes'] ) . '"';
-        $attrs .= ' href="' . esc_url( $url . '/' . $tag['file'] ) . '"';
+        $attrs .= ' href="' . esc_url( $url . '/' . $tag['file'] . $version_query ) . '"';
 
         // Each attribute value is already escaped above via esc_attr/esc_url.
         echo '<link ' . wp_kses_post( $attrs ) . '>' . "\n";

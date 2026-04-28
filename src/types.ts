@@ -12,6 +12,7 @@ export interface FaviconOption {
     padding: number;
     border_radius: number;
     icon_bg_color: string;
+    generated_at?: number;
 }
 
 export interface ConflictingPlugin {

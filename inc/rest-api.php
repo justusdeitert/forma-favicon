@@ -115,17 +115,40 @@ function forma_favicon_generate( WP_REST_Request $request ) {
         return new WP_Error( 'dir_error', __( 'Could not create favicon directory.', 'forma-favicon' ), [ 'status' => 500 ] );
     }
 
-    $source_image = forma_favicon_load_source( $attachment_id, $source_data );
+    // Persisted post-crop / post-rasterize source. Lets us regenerate after a page
+    // reload without losing the user's crop or SVG rasterization.
+    $stored_source_png = $dir_path . '/source.png';
+    $existing_option   = get_option( 'forma_favicon', [] );
+    $same_attachment   = ! empty( $existing_option['source_id'] )
+        && (int) $existing_option['source_id'] === (int) $attachment_id;
 
-    if ( is_wp_error( $source_image ) ) {
-        return $source_image;
+    if ( empty( $source_data ) && $same_attachment && file_exists( $stored_source_png ) ) {
+        $source_image = @imagecreatefrompng( $stored_source_png );
+        if ( ! $source_image ) {
+            return new WP_Error( 'gd_error', __( 'Could not load stored source image.', 'forma-favicon' ), [ 'status' => 500 ] );
+        }
+        imagealphablending( $source_image, false );
+        imagesavealpha( $source_image, true );
+    } else {
+        $source_image = forma_favicon_load_source( $attachment_id, $source_data );
+
+        if ( is_wp_error( $source_image ) ) {
+            return $source_image;
+        }
     }
+
+    // Save the working source so reloads and future regenerations preserve any crop.
+    imagealphablending( $source_image, false );
+    imagesavealpha( $source_image, true );
+    @imagepng( $source_image, $stored_source_png, 9 );
 
     forma_favicon_resize_all( $source_image, $dir_path, $padding, $border_radius, $icon_bg_color );
     imagedestroy( $source_image );
 
+    $generated_at = time();
+
     forma_favicon_generate_ico( $dir_path );
-    forma_favicon_write_manifest( $dir_path, $theme_color, $bg_color );
+    forma_favicon_write_manifest( $dir_path, $theme_color, $bg_color, $generated_at );
     forma_favicon_write_browserconfig( $dir_path, $bg_color );
 
     update_option( 'forma_favicon', [
@@ -136,6 +159,7 @@ function forma_favicon_generate( WP_REST_Request $request ) {
         'padding'       => $padding,
         'border_radius' => $border_radius,
         'icon_bg_color' => $icon_bg_color,
+        'generated_at'  => $generated_at,
     ] );
 
     return rest_ensure_response( [
@@ -225,16 +249,8 @@ function forma_favicon_resize_all( $source_image, $dir_path, $padding = 0, $bord
         $transparent = imagecolorallocatealpha( $canvas, 0, 0, 0, 127 );
         imagefill( $canvas, 0, 0, $transparent );
 
-        // Fill background color if set.
-        if ( $icon_bg_color ) {
-            $bg_rgb = forma_favicon_hex_to_rgb( $icon_bg_color );
-            $bg     = imagecolorallocate( $canvas, $bg_rgb[0], $bg_rgb[1], $bg_rgb[2] );
-            imagealphablending( $canvas, true );
-            imagefilledrectangle( $canvas, 0, 0, $size - 1, $size - 1, $bg );
-        }
-
-        // Calculate padding offset.
-        $pad_px   = (int) round( $size * $padding / 100 );
+        // Calculate padding offset and inner icon box.
+        $pad_px    = (int) round( $size * $padding / 100 );
         $icon_size = $size - ( $pad_px * 2 );
 
         if ( $icon_size < 1 ) {
@@ -242,15 +258,35 @@ function forma_favicon_resize_all( $source_image, $dir_path, $padding = 0, $bord
             $pad_px    = (int) ( ( $size - 1 ) / 2 );
         }
 
-        imagealphablending( $canvas, true );
-        imagecopyresampled( $canvas, $source_image, $pad_px, $pad_px, 0, 0, $icon_size, $icon_size, $src_w, $src_h );
+        // Render the inner icon (bg + resampled source) on its own canvas so the
+        // border radius rounds the icon area, not the outer padded canvas.
+        $icon_canvas = imagecreatetruecolor( $icon_size, $icon_size );
+        imagealphablending( $icon_canvas, false );
+        imagesavealpha( $icon_canvas, true );
+        $icon_transparent = imagecolorallocatealpha( $icon_canvas, 0, 0, 0, 127 );
+        imagefill( $icon_canvas, 0, 0, $icon_transparent );
 
-        // Apply border radius mask.
-        if ( $border_radius > 0 ) {
-            forma_favicon_apply_border_radius( $canvas, $size, $border_radius );
+        if ( $icon_bg_color ) {
+            $bg_rgb = forma_favicon_hex_to_rgb( $icon_bg_color );
+            $bg     = imagecolorallocate( $icon_canvas, $bg_rgb[0], $bg_rgb[1], $bg_rgb[2] );
+            imagealphablending( $icon_canvas, true );
+            imagefilledrectangle( $icon_canvas, 0, 0, $icon_size - 1, $icon_size - 1, $bg );
         }
 
+        imagealphablending( $icon_canvas, true );
+        imagecopyresampled( $icon_canvas, $source_image, 0, 0, 0, 0, $icon_size, $icon_size, $src_w, $src_h );
+
+        if ( $border_radius > 0 ) {
+            forma_favicon_apply_border_radius( $icon_canvas, $icon_size, $border_radius );
+        }
+
+        // Composite rounded icon onto the padded canvas.
+        imagealphablending( $icon_canvas, false );
+        imagesavealpha( $icon_canvas, true );
         imagealphablending( $canvas, false );
+        imagecopy( $canvas, $icon_canvas, $pad_px, $pad_px, 0, 0, $icon_size, $icon_size );
+        imagedestroy( $icon_canvas );
+
         imagesavealpha( $canvas, true );
         imagepng( $canvas, $dir_path . '/' . $filename, 9 );
         imagedestroy( $canvas );
@@ -271,6 +307,13 @@ function forma_favicon_apply_border_radius( &$image, $size, $radius_pct ) {
         return;
     }
 
+    // Cap at half the size so 50% always means a perfect circle.
+    if ( $radius > (int) floor( $size / 2 ) ) {
+        $radius = (int) floor( $size / 2 );
+    }
+
+    $is_circle = ( $radius * 2 >= $size );
+
     // Draw the mask at 4x resolution, then downsample for smooth anti-aliased edges.
     $scale    = 4;
     $big_size = $size * $scale;
@@ -284,16 +327,21 @@ function forma_favicon_apply_border_radius( &$image, $size, $radius_pct ) {
 
     $white = imagecolorallocate( $mask, 255, 255, 255 );
 
-    // Draw filled rounded rectangle on the oversized mask.
-    imagefilledrectangle( $mask, $big_r, 0, $big_size - $big_r - 1, $big_size - 1, $white );
-    imagefilledrectangle( $mask, 0, $big_r, $big_r - 1, $big_size - $big_r - 1, $white );
-    imagefilledrectangle( $mask, $big_size - $big_r, $big_r, $big_size - 1, $big_size - $big_r - 1, $white );
+    if ( $is_circle ) {
+        // Single centered ellipse: avoids 1px seams between four corner arcs.
+        imagefilledellipse( $mask, (int) ( $big_size / 2 ), (int) ( $big_size / 2 ), $big_size, $big_size, $white );
+    } else {
+        // Filled rounded rectangle: cross of rectangles + four corner discs.
+        imagefilledrectangle( $mask, $big_r, 0, $big_size - $big_r - 1, $big_size - 1, $white );
+        imagefilledrectangle( $mask, 0, $big_r, $big_r - 1, $big_size - $big_r - 1, $white );
+        imagefilledrectangle( $mask, $big_size - $big_r, $big_r, $big_size - 1, $big_size - $big_r - 1, $white );
 
-    $diameter = $big_r * 2;
-    imagefilledellipse( $mask, $big_r, $big_r, $diameter, $diameter, $white );
-    imagefilledellipse( $mask, $big_size - $big_r - 1, $big_r, $diameter, $diameter, $white );
-    imagefilledellipse( $mask, $big_r, $big_size - $big_r - 1, $diameter, $diameter, $white );
-    imagefilledellipse( $mask, $big_size - $big_r - 1, $big_size - $big_r - 1, $diameter, $diameter, $white );
+        $diameter = $big_r * 2;
+        imagefilledellipse( $mask, $big_r, $big_r, $diameter, $diameter, $white );
+        imagefilledellipse( $mask, $big_size - $big_r - 1, $big_r, $diameter, $diameter, $white );
+        imagefilledellipse( $mask, $big_r, $big_size - $big_r - 1, $diameter, $diameter, $white );
+        imagefilledellipse( $mask, $big_size - $big_r - 1, $big_size - $big_r - 1, $diameter, $diameter, $white );
+    }
 
     // Downsample the mask to target size.
     $small_mask = imagecreatetruecolor( $size, $size );
@@ -353,17 +401,20 @@ function forma_favicon_hex_to_rgb( $hex ) {
 /**
  * Write site.webmanifest.
  *
- * @param string $dir_path    Output directory.
- * @param string $theme_color Theme color hex.
- * @param string $bg_color    Background color hex.
+ * @param string $dir_path     Output directory.
+ * @param string $theme_color  Theme color hex.
+ * @param string $bg_color     Background color hex.
+ * @param int    $generated_at Unix timestamp used as cache-busting query string on icon URLs.
  */
-function forma_favicon_write_manifest( $dir_path, $theme_color, $bg_color ) {
+function forma_favicon_write_manifest( $dir_path, $theme_color, $bg_color, $generated_at = 0 ) {
+    $v = $generated_at ? '?v=' . (int) $generated_at : '';
+
     $manifest = [
         'name'             => get_bloginfo( 'name' ),
         'short_name'       => get_bloginfo( 'name' ),
         'icons'            => [
-            [ 'src' => 'android-chrome-192x192.png', 'sizes' => '192x192', 'type' => 'image/png' ],
-            [ 'src' => 'android-chrome-512x512.png', 'sizes' => '512x512', 'type' => 'image/png' ],
+            [ 'src' => 'android-chrome-192x192.png' . $v, 'sizes' => '192x192', 'type' => 'image/png' ],
+            [ 'src' => 'android-chrome-512x512.png' . $v, 'sizes' => '512x512', 'type' => 'image/png' ],
         ],
         'theme_color'      => $theme_color,
         'background_color' => $bg_color,
@@ -420,10 +471,11 @@ function forma_favicon_delete() {
     }
 
     update_option( 'forma_favicon', [
-        'source_id'   => 0,
-        'generated'   => false,
-        'theme_color' => '#ffffff',
-        'bg_color'    => '#ffffff',
+        'source_id'    => 0,
+        'generated'    => false,
+        'theme_color'  => '#ffffff',
+        'bg_color'     => '#ffffff',
+        'generated_at' => 0,
     ] );
 
     return rest_ensure_response( [ 'success' => true ] );

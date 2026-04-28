@@ -72,7 +72,15 @@ function forma_favicon_enqueue_admin_assets() {
     $source_url  = '';
 
     if ( ! empty( $option['source_id'] ) ) {
-        $source_url = wp_get_attachment_image_url( $option['source_id'], 'medium' );
+        $stored_source_png = $favicon_dir['path'] . '/source.png';
+
+        if ( file_exists( $stored_source_png ) ) {
+            // Use the persisted post-crop source so the admin preview reflects
+            // exactly what gets regenerated. mtime busts the browser cache.
+            $source_url = $favicon_dir['url'] . '/source.png?v=' . filemtime( $stored_source_png );
+        } else {
+            $source_url = wp_get_attachment_image_url( $option['source_id'], 'medium' );
+        }
     }
 
     wp_add_inline_script( 'forma-favicon-admin', 'window.formaFaviconAdmin = ' . wp_json_encode( [

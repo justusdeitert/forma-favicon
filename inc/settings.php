@@ -27,6 +27,7 @@ function forma_favicon_register_setting() {
                     'padding'       => [ 'type' => 'integer' ],
                     'border_radius' => [ 'type' => 'integer' ],
                     'icon_bg_color' => [ 'type' => 'string' ],
+                    'generated_at'  => [ 'type' => 'integer' ],
                 ],
             ],
         ],
@@ -54,5 +55,6 @@ function forma_favicon_sanitize( $value ) {
         'padding'       => isset( $value['padding'] )       ? min( 40, max( 0, absint( $value['padding'] ) ) ) : 0,
         'border_radius' => isset( $value['border_radius'] ) ? min( 50, max( 0, absint( $value['border_radius'] ) ) ) : 0,
         'icon_bg_color' => isset( $value['icon_bg_color'] ) ? sanitize_hex_color( $value['icon_bg_color'] ) : '',
+        'generated_at'  => isset( $value['generated_at'] ) ? absint( $value['generated_at'] ) : 0,
     ];
 }
