@@ -30,6 +30,7 @@
 | **iOS / Android home screen** | Apple Touch Icon (180px) and Android Chrome icon (192px) with rounded mask + label text, simulating the actual launcher | High |
 | **Bookmark bar** | 16px favicon inline in a row of bookmark items to test legibility at smallest size | High |
 | **PWA splash screen** | 512px icon centered on bg_color background, simulating the PWA startup screen | Medium |
+| **PWA install prompt** | Mock of the Chrome on Android "Add to Home screen" sheet using theme_color and the icon | Medium |
 | **Multiple tabs** | 4-5 tabs where the favicon is one among others to test distinguishability | Medium |
 | **Windows taskbar** | 32px icon in a simulated Windows 11 taskbar strip | Low |
 | **macOS Dock** | 512px icon with Dock shelf, showing how it looks as a saved web app | Low |
