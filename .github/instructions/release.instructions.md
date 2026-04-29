@@ -51,3 +51,23 @@ Also add a changelog section for the new version in `readme.txt`.
 - Confirm workflow success in GitHub Actions
 - Verify listing page and version on WordPress.org:
   - `https://wordpress.org/plugins/forma-favicon/`
+- The `== Changelog ==` section in `readme.txt` is what renders on the `#developers` tab. It updates automatically once the SVN deploy lands.
+
+## 8. Create GitHub release
+
+- Use `gh release create v<version> --title "v<version>" --notes "<notes>"`
+- Release notes format (use these sections as applicable, omit empty sections):
+
+```markdown
+### Added
+- Feature description
+
+### Fixed
+- Fix description
+
+### Changed
+- Change description
+```
+
+- Summarize commits since the last release tag. Group by category. Keep descriptions concise (one line each).
+- Do not rely on GitHub's auto-generated notes. The workflow no longer creates the release for you.
