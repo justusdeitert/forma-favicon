@@ -1,11 +1,12 @@
 <?php
+
 /**
  * Detect conflicting favicon plugins.
  *
  * @package FormaFavicon
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
@@ -41,11 +42,11 @@ function forma_favicon_get_active_conflicts() {
     $known = forma_favicon_get_known_conflicts();
     $conflicts = [];
 
-    foreach ( $known as $basename => $name ) {
-        if ( is_plugin_active( $basename ) ) {
+    foreach ($known as $basename => $name) {
+        if (is_plugin_active($basename)) {
             $conflicts[] = [
                 'basename' => $basename,
-                'name'     => $name,
+                'name' => $name,
             ];
         }
     }

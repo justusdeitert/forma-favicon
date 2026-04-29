@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plugin Name:  Forma Favicon
  * Description:  Favicon generator — upload a source image, configure colors, and generate all favicon sizes + ICO file.
@@ -15,13 +16,13 @@
  * @package FormaFavicon
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
-define( 'FORMA_FAVICON_VERSION', '1.0.3' );
-define( 'FORMA_FAVICON_DIR', plugin_dir_path( __FILE__ ) );
-define( 'FORMA_FAVICON_URL', plugin_dir_url( __FILE__ ) );
+define('FORMA_FAVICON_VERSION', '1.0.3');
+define('FORMA_FAVICON_DIR', plugin_dir_path(__FILE__));
+define('FORMA_FAVICON_URL', plugin_dir_url(__FILE__));
 
 require_once FORMA_FAVICON_DIR . 'inc/helpers.php';
 require_once FORMA_FAVICON_DIR . 'inc/settings.php';

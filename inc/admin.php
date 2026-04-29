@@ -5,7 +5,7 @@
  * @package FormaFavicon
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
@@ -14,86 +14,86 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function forma_favicon_admin_menu() {
     $hook = add_theme_page(
-        __( 'Favicon', 'forma-favicon' ),
-        __( 'Favicon', 'forma-favicon' ),
+        __('Favicon', 'forma-favicon'),
+        __('Favicon', 'forma-favicon'),
         'manage_options',
         'forma-favicon',
-        'forma_favicon_admin_page'
+        'forma_favicon_admin_page',
     );
 
-    if ( $hook ) {
-        add_action( 'admin_enqueue_scripts', function ( $current_hook ) use ( $hook ) {
-            if ( $current_hook !== $hook ) {
+    if ($hook) {
+        add_action('admin_enqueue_scripts', function ($current_hook) use ($hook) {
+            if ($current_hook !== $hook) {
                 return;
             }
 
             forma_favicon_enqueue_admin_assets();
-        } );
+        });
     }
 }
-add_action( 'admin_menu', 'forma_favicon_admin_menu' );
+add_action('admin_menu', 'forma_favicon_admin_menu');
 
 /**
  * Enqueue scripts and styles for the admin page.
  */
 function forma_favicon_enqueue_admin_assets() {
-    $asset_dir  = FORMA_FAVICON_DIR . 'build/';
-    $asset_uri  = FORMA_FAVICON_URL . 'build/';
+    $asset_dir = FORMA_FAVICON_DIR . 'build/';
+    $asset_uri = FORMA_FAVICON_URL . 'build/';
     $asset_file = $asset_dir . 'admin-favicon.asset.php';
-    $asset      = file_exists( $asset_file )
+    $asset = file_exists($asset_file)
         ? require $asset_file
-        : [ 'dependencies' => [], 'version' => FORMA_FAVICON_VERSION ];
+        : ['dependencies' => [], 'version' => FORMA_FAVICON_VERSION];
 
     wp_enqueue_media();
 
     wp_enqueue_script(
         'forma-favicon-admin',
         $asset_uri . 'admin-favicon.js',
-        array_merge( $asset['dependencies'], [ 'media-editor' ] ),
+        array_merge($asset['dependencies'], ['media-editor']),
         $asset['version'],
-        true
+        true,
     );
 
     wp_enqueue_style(
         'forma-favicon-admin',
         $asset_uri . 'admin-favicon.css',
         [],
-        $asset['version']
+        $asset['version'],
     );
 
-    wp_add_inline_style( 'forma-favicon-admin', '
+    wp_add_inline_style('forma-favicon-admin', '
         #wpbody-content > .notice.inline { display: inline-block; }
         #forma-favicon-app * { box-sizing: border-box; }
         #forma-favicon-app button:focus { outline: none; box-shadow: none; }
-    ' );
+    ');
 
-    $option      = get_option( 'forma_favicon', [] );
+    $option = get_option('forma_favicon', []);
     $favicon_dir = forma_favicon_get_dir();
-    $source_url  = '';
+    $source_url = '';
 
-    if ( ! empty( $option['source_id'] ) ) {
+    if (! empty($option['source_id'])) {
         $stored_source_png = $favicon_dir['path'] . '/source.png';
 
-        if ( file_exists( $stored_source_png ) ) {
+        if (file_exists($stored_source_png)) {
             // Use the persisted post-crop source so the admin preview reflects
             // exactly what gets regenerated. mtime busts the browser cache.
-            $source_url = $favicon_dir['url'] . '/source.png?v=' . filemtime( $stored_source_png );
+            $source_url = $favicon_dir['url'] . '/source.png?v=' . filemtime($stored_source_png);
         } else {
-            $source_url = wp_get_attachment_image_url( $option['source_id'], 'medium' );
+            $source_url = wp_get_attachment_image_url($option['source_id'], 'medium');
         }
     }
 
-    wp_add_inline_script( 'forma-favicon-admin', 'window.formaFaviconAdmin = ' . wp_json_encode( [
-        'nonce'      => wp_create_nonce( 'wp_rest' ),
-        'restUrl'    => rest_url( 'forma-favicon/v1/' ),
+    wp_add_inline_script('forma-favicon-admin', 'window.formaFaviconAdmin = ' . wp_json_encode([
+        'nonce' => wp_create_nonce('wp_rest'),
+        'restUrl' => rest_url('forma-favicon/v1/'),
         'faviconUrl' => $favicon_dir['url'],
-        'sourceUrl'  => $source_url,
-        'option'     => $option,
-        'conflicts'  => forma_favicon_get_active_conflicts(),
-        'siteIconId' => (int) get_option( 'site_icon', 0 ),
-        'siteTitle'  => get_bloginfo( 'name' ),
-        'siteUrl'    => home_url(),
-    ] ) . ';', 'before' );
+        'sourceUrl' => $source_url,
+        'option' => $option,
+        'conflicts' => forma_favicon_get_active_conflicts(),
+        'siteIconId' => (int) get_option('site_icon', 0),
+        'siteTitle' => get_bloginfo('name'),
+        'siteUrl' => home_url(),
+    ]) . ';', 'before');
 }
 
 /**

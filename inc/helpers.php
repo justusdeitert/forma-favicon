@@ -1,11 +1,12 @@
 <?php
+
 /**
  * Shared helper functions.
  *
  * @package FormaFavicon
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
@@ -19,6 +20,6 @@ function forma_favicon_get_dir() {
 
     return [
         'path' => $upload_dir['basedir'] . '/favicon',
-        'url'  => $upload_dir['baseurl'] . '/favicon',
+        'url' => $upload_dir['baseurl'] . '/favicon',
     ];
 }
