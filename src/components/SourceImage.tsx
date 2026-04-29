@@ -21,8 +21,7 @@ export const SourceImage = ({ sourceUrl, onSelect }: Props) => (
 					'transition-all duration-200 bg-gray-50 hover:bg-gray-100 hover:border-gray-300',
 					'flex items-center justify-center overflow-hidden appearance-none outline-none',
 					sourceUrl ? 'border-gray-200' : 'border-gray-300',
-				].join(' ')}
-			>
+				].join(' ')}>
 				{sourceUrl ? (
 					<img src={sourceUrl} alt="Favicon source" className="w-full h-full object-contain" />
 				) : (
@@ -45,8 +44,7 @@ export const SourceImage = ({ sourceUrl, onSelect }: Props) => (
 				<button
 					type="button"
 					onClick={onSelect}
-					className="px-4 py-2 rounded-lg text-sm font-medium border border-gray-200 bg-white text-gray-700 cursor-pointer hover:bg-gray-50 hover:border-gray-300 transition-all"
-				>
+					className="px-4 py-2 rounded-lg text-sm font-medium border border-gray-200 bg-white text-gray-700 cursor-pointer hover:bg-gray-50 hover:border-gray-300 transition-all">
 					{sourceUrl ? 'Change Image' : 'Select Image'}
 				</button>
 			</div>

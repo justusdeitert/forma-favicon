@@ -37,8 +37,7 @@ export const BrowserTabPreview = ({ faviconUrl, cacheBuster, livePreviewUrl, dar
 				{/* Browser window mockup */}
 				<div
 					className={`forma-favicon-browser-preview relative grid gap-4 w-[350px] h-[88px] pt-4 pl-4 overflow-hidden box-border border border-solid rounded-md${dark ? ' is-dark' : ''}`}
-					style={{ gridTemplateColumns: '58px 1fr' }}
-				>
+					style={{ gridTemplateColumns: '58px 1fr' }}>
 					{/* App icon (border radius is baked into the image / live canvas) */}
 					<img
 						src={appleTouchIcon}
@@ -54,8 +53,7 @@ export const BrowserTabPreview = ({ faviconUrl, cacheBuster, livePreviewUrl, dar
 							fill="none"
 							xmlns="http://www.w3.org/2000/svg"
 							viewBox="0 0 54 40"
-							className="forma-favicon-browser-preview__dots w-12 h-10 shrink-0"
-						>
+							className="forma-favicon-browser-preview__dots w-12 h-10 shrink-0">
 							<path
 								fillRule="evenodd"
 								clipRule="evenodd"
@@ -66,8 +64,7 @@ export const BrowserTabPreview = ({ faviconUrl, cacheBuster, livePreviewUrl, dar
 						{/* Tab */}
 						<div
 							className="forma-favicon-browser-preview__tab grid gap-2 p-2 flex-1 items-center rounded"
-							style={{ gridTemplateColumns: '24px auto 24px' }}
-						>
+							style={{ gridTemplateColumns: '24px auto 24px' }}>
 							<img
 								src={favicon32}
 								alt="Browser tab favicon"
@@ -81,8 +78,7 @@ export const BrowserTabPreview = ({ faviconUrl, cacheBuster, livePreviewUrl, dar
 								fill="none"
 								xmlns="http://www.w3.org/2000/svg"
 								viewBox="0 0 24 24"
-								className="forma-favicon-browser-preview__tab-close w-6 h-6"
-							>
+								className="forma-favicon-browser-preview__tab-close w-6 h-6">
 								<path d="M12 13.0607L15.7123 16.773L16.773 15.7123L13.0607 12L16.773 8.28772L15.7123 7.22706L12 10.9394L8.28771 7.22705L7.22705 8.28771L10.9394 12L7.22706 15.7123L8.28772 16.773L12 13.0607Z" />
 							</svg>
 						</div>

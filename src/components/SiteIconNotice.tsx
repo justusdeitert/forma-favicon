@@ -48,8 +48,7 @@ export const SiteIconNotice = () => {
 						type="button"
 						onClick={handleClear}
 						disabled={clearing}
-						className="inline-flex items-center px-3 py-1.5 rounded-md text-xs font-medium bg-amber-100 text-amber-700 border-none cursor-pointer hover:bg-amber-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-					>
+						className="inline-flex items-center px-3 py-1.5 rounded-md text-xs font-medium bg-amber-100 text-amber-700 border-none cursor-pointer hover:bg-amber-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
 						{clearing ? 'Removing…' : 'Remove WordPress Site Icon'}
 					</button>
 				</div>

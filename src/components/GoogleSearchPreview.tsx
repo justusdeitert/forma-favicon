@@ -36,15 +36,13 @@ export const GoogleSearchPreview = ({ faviconUrl, cacheBuster, livePreviewUrl, d
 			<div
 				className={`forma-favicon-google-preview rounded-lg border border-solid p-5 max-w-[600px] transition-colors ${
 					dark ? 'bg-[#202124] border-[#3c4043]' : 'bg-white border-gray-200'
-				}`}
-			>
+				}`}>
 				{/* Site row: favicon + url + dots menu */}
 				<div className="flex items-center gap-3 mb-1">
 					<div
 						className={`w-[28px] h-[28px] rounded-full overflow-hidden flex items-center justify-center shrink-0 border border-solid ${
 							dark ? 'bg-[#303134] border-[#3c4043]' : 'bg-[#f1f3f4] border-[#dadce0]'
-						}`}
-					>
+						}`}>
 						<img src={favicon32} alt="Search result favicon" className="w-full h-full block object-cover" />
 					</div>
 					<div className="flex flex-col min-w-0">
@@ -60,8 +58,7 @@ export const GoogleSearchPreview = ({ faviconUrl, cacheBuster, livePreviewUrl, d
 						aria-hidden="true"
 						viewBox="0 0 24 24"
 						className="w-5 h-5 ml-auto shrink-0"
-						style={{ fill: dark ? '#9aa0a6' : '#70757a' }}
-					>
+						style={{ fill: dark ? '#9aa0a6' : '#70757a' }}>
 						<path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
 					</svg>
 				</div>
@@ -69,8 +66,7 @@ export const GoogleSearchPreview = ({ faviconUrl, cacheBuster, livePreviewUrl, d
 				{/* Title */}
 				<h3
 					className="m-0 mb-1 text-xl font-normal leading-snug cursor-pointer"
-					style={{ color: dark ? '#8ab4f8' : '#1a0dab' }}
-				>
+					style={{ color: dark ? '#8ab4f8' : '#1a0dab' }}>
 					{displayTitle}
 				</h3>
 

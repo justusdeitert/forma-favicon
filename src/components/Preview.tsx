@@ -25,8 +25,7 @@ export const Preview = ({ faviconUrl, cacheBuster }: Props) => (
 				{PREVIEW_SIZES.map(({ file, label, desc }) => (
 					<div
 						key={file}
-						className="min-w-0 flex flex-col items-center gap-2 p-3 rounded-xl bg-white border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all"
-					>
+						className="min-w-0 flex flex-col items-center gap-2 p-3 rounded-xl bg-white border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all">
 						<div className="w-12 h-12 flex items-center justify-center">
 							<img
 								src={`${faviconUrl}/${file}?v=${cacheBuster}`}
@@ -54,8 +53,7 @@ export const Preview = ({ faviconUrl, cacheBuster }: Props) => (
 					{ADDITIONAL_FILES.map((file) => (
 						<span
 							key={file}
-							className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs text-gray-600"
-						>
+							className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs text-gray-600">
 							<span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
 							{file}
 						</span>

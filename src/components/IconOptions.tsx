@@ -83,8 +83,7 @@ const TileBackgroundField = ({ value, onChange }: { value: string; onChange: (v:
 						type="button"
 						onClick={() => onChange('')}
 						className="text-xs text-gray-400 hover:text-gray-600 border-none bg-transparent cursor-pointer"
-						title="Reset to transparent"
-					>
+						title="Reset to transparent">
 						✕
 					</button>
 				)}

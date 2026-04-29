@@ -152,8 +152,7 @@ export const AdminFaviconApp = () => {
 							onClick={() => setPreviewDark(false)}
 							className={`px-3 py-1.5 rounded-md border-none cursor-pointer transition-colors ${
 								!previewDark ? 'bg-white text-gray-800 shadow-sm' : 'bg-transparent text-gray-400 hover:text-gray-600'
-							}`}
-						>
+							}`}>
 							☀ Light
 						</button>
 						<button
@@ -161,8 +160,7 @@ export const AdminFaviconApp = () => {
 							onClick={() => setPreviewDark(true)}
 							className={`px-3 py-1.5 rounded-md border-none cursor-pointer transition-colors ${
 								previewDark ? 'bg-gray-800 text-white shadow-sm' : 'bg-transparent text-gray-400 hover:text-gray-600'
-							}`}
-						>
+							}`}>
 							☾ Dark
 						</button>
 					</div>

@@ -35,8 +35,7 @@ export const ConflictNotice = ({ conflicts }: Props) => {
 						{conflicts.map((plugin) => (
 							<li
 								key={plugin.basename}
-								className="flex items-center justify-between gap-4 p-3 bg-white rounded-lg border border-amber-100"
-							>
+								className="flex items-center justify-between gap-4 p-3 bg-white rounded-lg border border-amber-100">
 								<span className="text-sm font-medium text-gray-700">{plugin.name}</span>
 								<span className="text-xs text-amber-600">Active</span>
 							</li>

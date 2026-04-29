@@ -27,16 +27,14 @@ export const DeleteModal = ({ deleting, onConfirm, onCancel }: Props) => (
 				<button
 					type="button"
 					onClick={onCancel}
-					className="px-4 py-2 rounded-lg text-sm font-medium border border-gray-200 bg-white text-gray-700 cursor-pointer hover:bg-gray-50 transition-all"
-				>
+					className="px-4 py-2 rounded-lg text-sm font-medium border border-gray-200 bg-white text-gray-700 cursor-pointer hover:bg-gray-50 transition-all">
 					Cancel
 				</button>
 				<button
 					type="button"
 					onClick={onConfirm}
 					disabled={deleting}
-					className="px-4 py-2 rounded-lg text-sm font-medium border-none bg-red-600 text-white cursor-pointer hover:bg-red-700 transition-all disabled:opacity-50"
-				>
+					className="px-4 py-2 rounded-lg text-sm font-medium border-none bg-red-600 text-white cursor-pointer hover:bg-red-700 transition-all disabled:opacity-50">
 					{deleting ? 'Removing…' : 'Remove All'}
 				</button>
 			</div>

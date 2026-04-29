@@ -83,15 +83,13 @@ export const CropModal = ({ imageUrl, onCrop, onCancel }: Props) => {
 					<button
 						type="button"
 						onClick={onCancel}
-						className="px-4 py-2 rounded-lg text-sm font-medium border border-gray-200 bg-white text-gray-700 cursor-pointer hover:bg-gray-50 transition-colors"
-					>
+						className="px-4 py-2 rounded-lg text-sm font-medium border border-gray-200 bg-white text-gray-700 cursor-pointer hover:bg-gray-50 transition-colors">
 						Cancel
 					</button>
 					<button
 						type="button"
 						onClick={handleConfirm}
-						className="px-4 py-2 rounded-lg text-sm font-medium border-none bg-blue-600 text-white cursor-pointer hover:bg-blue-700 transition-colors"
-					>
+						className="px-4 py-2 rounded-lg text-sm font-medium border-none bg-blue-600 text-white cursor-pointer hover:bg-blue-700 transition-colors">
 						Apply Crop
 					</button>
 				</div>
