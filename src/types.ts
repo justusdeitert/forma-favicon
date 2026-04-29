@@ -5,40 +5,40 @@
  */
 
 export interface FaviconOption {
-    source_id: number;
-    generated: boolean;
-    theme_color: string;
-    bg_color: string;
-    padding: number;
-    border_radius: number;
-    icon_bg_color: string;
-    generated_at?: number;
+	source_id: number;
+	generated: boolean;
+	theme_color: string;
+	bg_color: string;
+	padding: number;
+	border_radius: number;
+	icon_bg_color: string;
+	generated_at?: number;
 }
 
 export interface ConflictingPlugin {
-    basename: string;
-    name: string;
+	basename: string;
+	name: string;
 }
 
 export interface WindowData {
-    nonce: string;
-    restUrl: string;
-    faviconUrl: string;
-    sourceUrl: string;
-    option: FaviconOption;
-    conflicts: ConflictingPlugin[];
-    siteIconId: number;
-    siteTitle: string;
-    siteUrl: string;
+	nonce: string;
+	restUrl: string;
+	faviconUrl: string;
+	sourceUrl: string;
+	option: FaviconOption;
+	conflicts: ConflictingPlugin[];
+	siteIconId: number;
+	siteTitle: string;
+	siteUrl: string;
 }
 
 export interface Notice {
-    type: 'success' | 'error';
-    message: string;
+	type: 'success' | 'error';
+	message: string;
 }
 
 export interface PreviewSize {
-    file: string;
-    label: string;
-    desc: string;
+	file: string;
+	label: string;
+	desc: string;
 }

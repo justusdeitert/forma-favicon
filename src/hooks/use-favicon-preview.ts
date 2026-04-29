@@ -7,14 +7,14 @@
  * @package FormaFavicon
  */
 
-import { useState, useEffect } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
 
 interface PreviewOptions {
-    sourceUrl: string;
-    padding: number;
-    borderRadius: number;
-    iconBgColor: string;
-    size?: number;
+	sourceUrl: string;
+	padding: number;
+	borderRadius: number;
+	iconBgColor: string;
+	size?: number;
 }
 
 /**
@@ -23,75 +23,81 @@ interface PreviewOptions {
  * half the box size, with no visible discontinuity.
  */
 function roundedRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
-    const radius = Math.min(r, Math.min(w, h) / 2);
-    ctx.beginPath();
-    ctx.moveTo(x + radius, y);
-    ctx.arcTo(x + w, y,     x + w, y + h, radius);
-    ctx.arcTo(x + w, y + h, x,     y + h, radius);
-    ctx.arcTo(x,     y + h, x,     y,     radius);
-    ctx.arcTo(x,     y,     x + w, y,     radius);
-    ctx.closePath();
+	const radius = Math.min(r, Math.min(w, h) / 2);
+	ctx.beginPath();
+	ctx.moveTo(x + radius, y);
+	ctx.arcTo(x + w, y, x + w, y + h, radius);
+	ctx.arcTo(x + w, y + h, x, y + h, radius);
+	ctx.arcTo(x, y + h, x, y, radius);
+	ctx.arcTo(x, y, x + w, y, radius);
+	ctx.closePath();
 }
 
-export function useFaviconPreview({ sourceUrl, padding, borderRadius, iconBgColor, size = 128 }: PreviewOptions): string {
-    const [previewUrl, setPreviewUrl] = useState('');
+export function useFaviconPreview({
+	sourceUrl,
+	padding,
+	borderRadius,
+	iconBgColor,
+	size = 128,
+}: PreviewOptions): string {
+	const [previewUrl, setPreviewUrl] = useState('');
 
-    useEffect(() => {
-        if (!sourceUrl) {
-            setPreviewUrl('');
-            return;
-        }
+	useEffect(() => {
+		if (!sourceUrl) {
+			setPreviewUrl('');
+			return;
+		}
 
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
+		const img = new Image();
+		img.crossOrigin = 'anonymous';
 
-        img.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = size;
-            canvas.height = size;
-            const ctx = canvas.getContext('2d');
-            if (!ctx) return;
+		img.onload = () => {
+			const canvas = document.createElement('canvas');
+			canvas.width = size;
+			canvas.height = size;
+			const ctx = canvas.getContext('2d');
+			if (!ctx) return;
 
-            // Clear (transparent outside the padded icon area).
-            ctx.clearRect(0, 0, size, size);
+			// Clear (transparent outside the padded icon area).
+			ctx.clearRect(0, 0, size, size);
 
-            // Calculate padding and inner icon box.
-            const padPx = Math.round(size * padding / 100);
-            const iconSize = size - padPx * 2;
+			// Calculate padding and inner icon box.
+			const padPx = Math.round((size * padding) / 100);
+			const iconSize = size - padPx * 2;
 
-            if (iconSize <= 0) {
-                setPreviewUrl(canvas.toDataURL('image/png'));
-                return;
-            }
+			if (iconSize <= 0) {
+				setPreviewUrl(canvas.toDataURL('image/png'));
+				return;
+			}
 
-            // Border radius is relative to the icon box, not the full canvas,
-            // so padding stays transparent and the visible tile is what gets rounded.
-            const radiusPx = Math.round(iconSize * borderRadius / 100);
+			// Border radius is relative to the icon box, not the full canvas,
+			// so padding stays transparent and the visible tile is what gets rounded.
+			const radiusPx = Math.round((iconSize * borderRadius) / 100);
 
-            ctx.save();
-            if (radiusPx > 0) {
-                roundedRect(ctx, padPx, padPx, iconSize, iconSize, radiusPx);
-                ctx.clip();
-            }
+			ctx.save();
+			if (radiusPx > 0) {
+				roundedRect(ctx, padPx, padPx, iconSize, iconSize, radiusPx);
+				ctx.clip();
+			}
 
-            // Fill background color inside the rounded icon box.
-            if (iconBgColor) {
-                ctx.fillStyle = iconBgColor;
-                ctx.fillRect(padPx, padPx, iconSize, iconSize);
-            }
+			// Fill background color inside the rounded icon box.
+			if (iconBgColor) {
+				ctx.fillStyle = iconBgColor;
+				ctx.fillRect(padPx, padPx, iconSize, iconSize);
+			}
 
-            ctx.drawImage(img, padPx, padPx, iconSize, iconSize);
-            ctx.restore();
+			ctx.drawImage(img, padPx, padPx, iconSize, iconSize);
+			ctx.restore();
 
-            setPreviewUrl(canvas.toDataURL('image/png'));
-        };
+			setPreviewUrl(canvas.toDataURL('image/png'));
+		};
 
-        img.onerror = () => {
-            setPreviewUrl('');
-        };
+		img.onerror = () => {
+			setPreviewUrl('');
+		};
 
-        img.src = sourceUrl;
-    }, [sourceUrl, padding, borderRadius, iconBgColor, size]);
+		img.src = sourceUrl;
+	}, [sourceUrl, padding, borderRadius, iconBgColor, size]);
 
-    return previewUrl;
+	return previewUrl;
 }

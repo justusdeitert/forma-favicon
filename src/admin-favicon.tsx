@@ -13,5 +13,5 @@ import { AdminFaviconApp } from './components/AdminFaviconApp';
 
 const root = document.getElementById('forma-favicon-app');
 if (root) {
-    render(<AdminFaviconApp />, root);
+	render(<AdminFaviconApp />, root);
 }
