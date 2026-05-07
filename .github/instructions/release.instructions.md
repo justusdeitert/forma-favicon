@@ -23,9 +23,9 @@ Also add a changelog section for the new version in `readme.txt`.
 
 ## 3. Sync lock file
 
-- Run `npm install --package-lock-only` to update `package-lock.json`
-- If dependencies changed, run `npm install` instead and commit the updated lock file
-- Ensure CI install step will pass (`npm ci`)
+- Always run `npm install` (never `--package-lock-only`) so optional platform-specific deps are recorded
+- Commit the updated `package-lock.json` if it changed
+- The CI workflow uses `npm install` (not `npm ci`) so it can fill in optional deps for the runner platform that are not in the lockfile
 
 ## 4. Build and verify
 
