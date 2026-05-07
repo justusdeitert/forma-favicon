@@ -4,6 +4,8 @@
  * @package FormaFavicon
  */
 
+import { getContainFit } from './contain-fit';
+
 export function rasterizeToBase64(imageUrl: string, size = 512): Promise<string> {
 	return new Promise((resolve, reject) => {
 		const img = new Image();
@@ -19,7 +21,17 @@ export function rasterizeToBase64(imageUrl: string, size = 512): Promise<string>
 				return reject(new Error('Canvas not supported'));
 			}
 
-			ctx.drawImage(img, 0, 0, size, size);
+			// Preserve aspect ratio: fit the image inside the square canvas
+			// and center it, leaving transparent padding on the shorter axis.
+			const fit = getContainFit(
+				img.naturalWidth || img.width,
+				img.naturalHeight || img.height,
+				size,
+				size,
+			);
+
+			ctx.clearRect(0, 0, size, size);
+			ctx.drawImage(img, fit.x, fit.y, fit.width, fit.height);
 			resolve(canvas.toDataURL('image/png'));
 		};
 

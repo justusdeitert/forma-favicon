@@ -8,6 +8,7 @@
  */
 
 import { useEffect, useState } from '@wordpress/element';
+import { getContainFit } from '../utils/contain-fit';
 
 interface PreviewOptions {
 	sourceUrl: string;
@@ -86,7 +87,18 @@ export function useFaviconPreview({
 				ctx.fillRect(padPx, padPx, iconSize, iconSize);
 			}
 
-			ctx.drawImage(img, padPx, padPx, iconSize, iconSize);
+			// Preserve aspect ratio (contain): fit the image inside the icon
+			// box without stretching, centering on the shorter axis.
+			const fit = getContainFit(
+				img.naturalWidth || img.width,
+				img.naturalHeight || img.height,
+				iconSize,
+				iconSize,
+				padPx,
+				padPx,
+			);
+
+			ctx.drawImage(img, fit.x, fit.y, fit.width, fit.height);
 			ctx.restore();
 
 			setPreviewUrl(canvas.toDataURL('image/png'));
