@@ -4,7 +4,7 @@ Tags: favicon, icon, generator, browser icon, site icon
 Requires at least: 6.2
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -93,6 +93,15 @@ No. Generated files remain in the uploads directory. You can delete them from th
 4. Icon styling controls — padding, border radius, and background color
 
 == Changelog ==
+
+= 1.0.4 =
+* Show source image and filenames in the generated files grid
+* Default the preview theme to the system color scheme
+* Let preview surfaces reflect the chosen icon shape
+* Rename icon styling controls for clarity
+* Rework favicon generator for mobile caching, source persistence, and rounded shapes
+* Upgrade build dependencies and patch transitive vulnerabilities
+* Adopt Biome and PHP CS Fixer tooling
 
 = 1.0.3 =
 * Add image crop tool for non-square source images
