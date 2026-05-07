@@ -4,7 +4,7 @@ Tags: favicon, icon, generator, browser icon, site icon
 Requires at least: 6.2
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.0.4
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -93,6 +93,11 @@ No. Generated files remain in the uploads directory. You can delete them from th
 4. Icon styling controls — padding, border radius, and background color
 
 == Changelog ==
+
+= 1.1.0 =
+* Add free crop option for non-square selections in the crop modal
+* Fix aspect ratio for non-square SVG sources so wide or tall icons no longer stretch
+* Preserve aspect ratio in the live favicon preview
 
 = 1.0.4 =
 * Show source image and filenames in the generated files grid
