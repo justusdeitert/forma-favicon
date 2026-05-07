@@ -1,5 +1,8 @@
 /**
- * Modal dialog for cropping a source image to a 1:1 aspect ratio.
+ * Modal dialog for cropping a source image. Defaults to a 1:1 square crop,
+ * but the user can switch to a free rectangular crop. Non-square crops are
+ * fit (contain) into a transparent square PNG so the downstream favicon
+ * pipeline preserves their aspect ratio.
  *
  * @package FormaFavicon
  */
@@ -7,6 +10,7 @@
 import { useCallback, useRef, useState } from '@wordpress/element';
 import ReactCrop, { type Crop, centerCrop, makeAspectCrop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
+import { getContainFit } from '../utils/contain-fit';
 
 interface Props {
 	imageUrl: string;
@@ -14,18 +18,38 @@ interface Props {
 	onCancel: () => void;
 }
 
-function getInitialCrop(width: number, height: number): Crop {
-	return centerCrop(makeAspectCrop({ unit: '%', width: 90 }, 1, width, height), width, height);
+function getInitialCrop(width: number, height: number, aspect: number | undefined): Crop {
+	if (aspect) {
+		return centerCrop(makeAspectCrop({ unit: '%', width: 90 }, aspect, width, height), width, height);
+	}
+	return centerCrop({ unit: '%', width: 90, height: 90, x: 5, y: 5 }, width, height);
 }
 
 export const CropModal = ({ imageUrl, onCrop, onCancel }: Props) => {
 	const [crop, setCrop] = useState<Crop>();
+	const [freeCrop, setFreeCrop] = useState(false);
 	const imgRef = useRef<HTMLImageElement>(null);
 
-	const onImageLoad = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
-		const { naturalWidth, naturalHeight } = e.currentTarget;
-		setCrop(getInitialCrop(naturalWidth, naturalHeight));
-	}, []);
+	const aspect = freeCrop ? undefined : 1;
+
+	const onImageLoad = useCallback(
+		(e: React.SyntheticEvent<HTMLImageElement>) => {
+			const { naturalWidth, naturalHeight } = e.currentTarget;
+			setCrop(getInitialCrop(naturalWidth, naturalHeight, aspect));
+		},
+		[aspect],
+	);
+
+	const toggleFreeCrop = useCallback(
+		(next: boolean) => {
+			setFreeCrop(next);
+			const img = imgRef.current;
+			if (img) {
+				setCrop(getInitialCrop(img.naturalWidth, img.naturalHeight, next ? undefined : 1));
+			}
+		},
+		[],
+	);
 
 	const handleConfirm = useCallback(() => {
 		const img = imgRef.current;
@@ -55,7 +79,23 @@ export const CropModal = ({ imageUrl, onCrop, onCancel }: Props) => {
 		const ctx = canvas.getContext('2d');
 		if (!ctx) return;
 
-		ctx.drawImage(img, Math.round(cropX), Math.round(cropY), Math.round(cropW), Math.round(cropH), 0, 0, size, size);
+		ctx.clearRect(0, 0, size, size);
+
+		// Contain-fit the cropped region into a square so non-square crops
+		// keep their aspect ratio when the favicon pipeline resizes them.
+		const fit = getContainFit(cropW, cropH, size, size);
+
+		ctx.drawImage(
+			img,
+			Math.round(cropX),
+			Math.round(cropY),
+			Math.round(cropW),
+			Math.round(cropH),
+			Math.round(fit.x),
+			Math.round(fit.y),
+			Math.round(fit.width),
+			Math.round(fit.height),
+		);
 
 		onCrop(canvas.toDataURL('image/png'));
 	}, [crop, onCrop]);
@@ -65,10 +105,28 @@ export const CropModal = ({ imageUrl, onCrop, onCancel }: Props) => {
 			<div className="bg-white rounded-xl shadow-xl max-w-xl w-full mx-4 p-6">
 				<h2 className="text-base font-medium text-gray-700 m-0 mb-4">Crop Image</h2>
 				<p className="text-xs text-gray-400 m-0 mb-4">
-					Drag to select a square area. The selection will be used as your favicon source.
+					{freeCrop
+						? 'Drag to select any rectangular area. Non-square crops keep their aspect ratio.'
+						: 'Drag to select a square area. The selection will be used as your favicon source.'}
 				</p>
+				<div className="flex items-center gap-2 mb-4">
+					<label className="inline-flex items-center gap-2 text-xs text-gray-600 cursor-pointer select-none">
+						<input
+							type="checkbox"
+							checked={freeCrop}
+							onChange={(e) => toggleFreeCrop(e.currentTarget.checked)}
+							className="cursor-pointer"
+						/>
+						Free crop (allow non-square selection)
+					</label>
+				</div>
 				<div className="flex justify-center mb-6">
-					<ReactCrop crop={crop} onChange={(c) => setCrop(c)} aspect={1} circularCrop={false} className="max-h-[60vh]">
+					<ReactCrop
+						crop={crop}
+						onChange={(c) => setCrop(c)}
+						aspect={aspect}
+						circularCrop={false}
+						className="max-h-[60vh]">
 						<img
 							ref={imgRef}
 							src={imageUrl}
